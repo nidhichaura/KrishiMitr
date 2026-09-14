@@ -29,3 +29,23 @@ app/generated_audio/reply_*
 .pytest_cache/
 .coverage
 htmlcov/
+
+# --- Local runtime data ---
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# --- ML weights, caches, and training artifacts ---
+weights/
+*.pt
+*.pth
+*.onnx
+.torch-cache/
+
+# --- Generated artifacts and temporary files ---
+output/
+tmp/
+
+# --- Notebook checkpoints ---
+.ipynb_checkpoints/
