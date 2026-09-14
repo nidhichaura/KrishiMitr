@@ -32,7 +32,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 
 The script waits until the new server is healthy before opening the browser.
 It opens `http://127.0.0.1:8000`; if an old server already uses that port, it
-automatically uses `http://127.0.0.1:8010` so you never accidentally show an
+automatically uses `http://127.0.0.1:8011` so you never accidentally show an
 outdated version. Keep the server PowerShell window open.
 
 ## Suggested 90-second demo

@@ -6,8 +6,8 @@ if (-not (Test-Path ".venv\Scripts\python.exe")) { Write-Host "Missing .venv. Se
 $pythonPath = Join-Path $projectDir ".venv\Scripts\python.exe"
 $port = 8000
 if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) {
-    $port = 8010
-    Write-Host "Port 8000 is already in use. Starting the fresh demo on port 8010 instead." -ForegroundColor Yellow
+    $port = 8011
+    Write-Host "Port 8000 is already in use. Starting the fresh demo on port 8011 instead." -ForegroundColor Yellow
 }
 $url = "http://127.0.0.1:$port"
 Write-Host "Starting KrishiMitr at $url" -ForegroundColor Green

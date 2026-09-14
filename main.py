@@ -8,6 +8,8 @@ Then expose it publicly (e.g. via ngrok) and set the resulting URL
 (https://<your-domain>/webhook/whatsapp) as your Twilio WhatsApp Sandbox's
 "WHEN A MESSAGE COMES IN" webhook.
 """
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -19,6 +21,7 @@ from app.services import vision_service
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
+PROJECT_ROOT = Path(__file__).resolve().parent
 
 app = FastAPI(
     title="KrishiMitr Backend",
@@ -37,7 +40,7 @@ app.add_middleware(
 # Twilio downloads generated spoken replies from this public path.
 from app.services.voice_reply_service import VOICE_REPLY_DIR
 app.mount("/audio-replies", StaticFiles(directory=str(VOICE_REPLY_DIR)), name="audio-replies")
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory=str(PROJECT_ROOT / "app" / "static")), name="static")
 
 app.include_router(health.router, tags=["Health"])
 app.include_router(webhook.router, tags=["WhatsApp Webhook"])
