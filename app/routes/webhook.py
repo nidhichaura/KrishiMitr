@@ -22,7 +22,7 @@ from app.config import settings
 from app.core.constants import Intent, MediaCategory
 from app.models.schemas import DiseaseDetectionResult
 from app.services import speech_service, vision_service, market_service, response_service, voice_reply_service
-from app.utils.language_utils import detect_user_language, normalize_language, translate
+from app.utils.language_utils import detect_response_language, detect_user_language, normalize_language, translate
 from app.utils.media_utils import (
     download_twilio_media,
     classify_media,
@@ -87,18 +87,22 @@ async def whatsapp_webhook(
         )
     except Exception:
         logger.exception(f"Unhandled error while processing message from {From}")
-        fallback_lang = detect_user_language(Body) if Body else "hi"
+        fallback_lang = detect_response_language(Body) if Body else "hi"
         response_text = translate("processing_error", fallback_lang)
         response_lang = fallback_lang
 
-    message = twiml.message(response_text)
+    # Keep text and audio in separate TwiML messages. WhatsApp clients can
+    # otherwise foreground the media attachment and hide the accompanying
+    # written answer.
+    twiml.message(response_text)
     # Send the written response plus a spoken version for every WhatsApp
     # interaction. This makes photo and text responses usable for farmers who
     # cannot comfortably read. TTS safely degrades to text only when Sarvam
     # credentials/public URL have not been configured.
     audio_url = await voice_reply_service.create_voice_reply(response_text, response_lang)
     if audio_url:
-        message.media(audio_url)
+        audio_message = twiml.message()
+        audio_message.media(audio_url)
     # Twilio's webhook reply is XML.  Send explicit UTF-8 bytes and charset so
     # Odia and every other native Indic script reaches WhatsApp unchanged.
     return Response(
@@ -155,9 +159,10 @@ async def route_incoming_message_with_language(
 
     # --- Case 3: Leaf image -> OpenCV preprocessing + EfficientNet CNN ---
     if media_category == MediaCategory.IMAGE:
-        lang = detect_user_language(body) if body else "hi"
-        # A crop name is optional: farmers can send only a photo. When it is
-        # supplied, it becomes an extra crop-match guard against mislabeling.
+        lang = detect_response_language(body) if body else "hi"
+        # A disease-only classifier cannot identify an arbitrary crop safely.
+        # Require the crop in the same WhatsApp message so its language drives
+        # the response and the model evaluates only that crop's dataset labels.
         expected_crop = speech_service.extract_commodity(body) if body else None
         if not expected_crop:
             return translate("ask_photo_with_crop", lang), lang

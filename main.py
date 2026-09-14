@@ -13,8 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
-from app.routes import webhook, health, telephony
-from app.routes import web
+from app.routes import webhook, health, exotel_ivr
+from app.routes import web, business
 from app.services import vision_service
 from app.utils.logger import get_logger
 
@@ -41,8 +41,9 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(health.router, tags=["Health"])
 app.include_router(webhook.router, tags=["WhatsApp Webhook"])
-app.include_router(telephony.router, tags=["SMS and Keypad-phone IVR"])
+app.include_router(exotel_ivr.router, tags=["Exotel IVR"])
 app.include_router(web.router, tags=["Farmer Web App"])
+app.include_router(business.router)
 
 
 @app.on_event("startup")

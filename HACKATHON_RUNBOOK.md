@@ -45,10 +45,6 @@ outdated version. Keep the server PowerShell window open.
    price source and date. Use the hotspot first so this remains live.
 4. Send a Hindi WhatsApp message or voice note to the Twilio number and show
    the same assistant on a phone.
-5. If you have provisioned a voice-capable Twilio number, call it from a
-   keypad phone and press **1** to demonstrate the Hindi IVR fallback. Explain
-   that basic phones use call/SMS, while WhatsApp photo diagnosis needs a
-   smartphone.
 5. Close by saying: “The web app makes the service discoverable; WhatsApp
    keeps it usable for farmers who already know messaging.”
 

@@ -43,12 +43,75 @@ _SCRIPT_LANGUAGE_MARKERS = {
 
 _LANGUAGE_ALIASES = {"od": "or", "ori": "or", "ben": "bn", "kan": "kn", "mal": "ml", "mar": "mr"}
 
+# The classifier's labels are dataset identifiers, not farmer-facing text.
+# Keep the returned disease tied to the exact trained class, while showing its
+# name in the language selected/detected from the farmer's caption.
+_MODEL_LABEL_TRANSLATIONS = {
+    "hi": {
+        "Tomato - Early blight": "टमाटर - अगेती झुलसा", "Tomato - Late blight": "टमाटर - पछेती झुलसा",
+        "Tomato - Bacterial spot": "टमाटर - बैक्टीरियल धब्बा", "Tomato - Leaf Mold": "टमाटर - पत्ती फफूंद",
+        "Tomato - Septoria leaf spot": "टमाटर - सेप्टोरिया पत्ती धब्बा",
+        "Tomato - Target Spot": "टमाटर - टारगेट स्पॉट", "Tomato - healthy": "टमाटर - स्वस्थ",
+        "Potato - Early blight": "आलू - अगेती झुलसा", "Potato - Late blight": "आलू - पछेती झुलसा",
+        "Potato - healthy": "आलू - स्वस्थ", "Corn (maize) - Common rust": "मक्का - सामान्य रतुआ",
+        "Corn (maize) - healthy": "मक्का - स्वस्थ",
+    },
+    "pa": {
+        "Tomato - Early blight": "ਟਮਾਟਰ - ਅਰਲੀ ਬਲਾਈਟ", "Tomato - Late blight": "ਟਮਾਟਰ - ਲੇਟ ਬਲਾਈਟ",
+        "Tomato - Bacterial spot": "ਟਮਾਟਰ - ਬੈਕਟੀਰੀਅਲ ਧੱਬਾ", "Tomato - Leaf Mold": "ਟਮਾਟਰ - ਪੱਤਾ ਫਫੂੰਦ",
+        "Tomato - Septoria leaf spot": "ਟਮਾਟਰ - ਸੈਪਟੋਰੀਆ ਪੱਤਾ ਧੱਬਾ",
+        "Tomato - Target Spot": "ਟਮਾਟਰ - ਟਾਰਗੇਟ ਸਪਾਟ", "Tomato - healthy": "ਟਮਾਟਰ - ਸਿਹਤਮੰਦ",
+        "Potato - Early blight": "ਆਲੂ - ਅਰਲੀ ਬਲਾਈਟ", "Potato - Late blight": "ਆਲੂ - ਲੇਟ ਬਲਾਈਟ",
+        "Potato - healthy": "ਆਲੂ - ਸਿਹਤਮੰਦ", "Corn (maize) - Common rust": "ਮੱਕੀ - ਆਮ ਰਤੂਆ",
+        "Corn (maize) - healthy": "ਮੱਕੀ - ਸਿਹਤਮੰਦ",
+    },
+}
+
+_MODEL_CROP_TRANSLATIONS = {
+    "hi": {"Tomato": "टमाटर", "Potato": "आलू", "Corn (maize)": "मक्का", "Apple": "सेब", "Grape": "अंगूर"},
+    "pa": {"Tomato": "ਟਮਾਟਰ", "Potato": "ਆਲੂ", "Corn (maize)": "ਮੱਕੀ", "Apple": "ਸੇਬ", "Grape": "ਅੰਗੂਰ"},
+}
+
+
+def localize_model_label(label: str, lang: str) -> str:
+    """Render a trained class label for the farmer without changing its meaning."""
+    language = normalize_language(lang, default=Language.ENGLISH.value)
+    return (
+        _MODEL_LABEL_TRANSLATIONS.get(language, {}).get(label)
+        or _MODEL_CROP_TRANSLATIONS.get(language, {}).get(label)
+        or label
+    )
+
 
 def normalize_language(lang: str | None, default: str = "hi") -> str:
     """Return an internal supported code for browser, ASR, and text inputs."""
     code = (lang or "").lower().split("-")[0]
     code = _LANGUAGE_ALIASES.get(code, code)
     return code if code in {item.value for item in Language} else default
+
+
+_EXPLICIT_LANGUAGE_REQUESTS = {
+    "pa": ("punjabi", "ਪੰਜਾਬੀ", "ਪੰਜਾਬੀ ਵਿੱਚ", "ਪੰਜਾਬੀ ਵਿਚ"),
+    "hi": ("hindi", "हिंदी", "हिन्दी", "हिंदी में"),
+    "en": ("english", "in english"),
+    "mr": ("marathi", "मराठी"),
+    "ta": ("tamil", "தமிழ்"),
+    "te": ("telugu", "తెలుగు"),
+    "bn": ("bengali", "বাংলা"),
+    "or": ("odia", "odia", "ଓଡ଼ିଆ"),
+    "gu": ("gujarati", "ગુજરાતી"),
+    "kn": ("kannada", "ಕನ್ನಡ"),
+    "ml": ("malayalam", "മലയാളം"),
+}
+
+
+def detect_response_language(text: str, default: str = "hi") -> str:
+    """Prefer an explicit output-language request, otherwise detect its script."""
+    lowered = (text or "").casefold()
+    for language, requests in _EXPLICIT_LANGUAGE_REQUESTS.items():
+        if any(request.casefold() in lowered for request in requests):
+            return language
+    return detect_user_language(text, default)
 
 
 def detect_user_language(text: str, default: str = "hi") -> str:
@@ -188,7 +251,7 @@ MESSAGES = {
         "gu": "માફ કરશો, તમારો વૉઇસ મેસેજ સ્પષ્ટ સમજાયો નથી. કૃપા કરીને શાંત જગ્યાએ ધીમે અને સ્પષ્ટ રીતે ફરી બોલો અથવા ટેક્સ્ટ મોકલો.",
     },
     "disease_result": {
-        "hi": "🌿 *रोग जांच परिणाम*\nफसल: {crop}\nस्थिति: {disease}\nविश्वास: {confidence}%\n\n💊 *उपचार सुझाव:*\n{remedy}\n\n⚠️ यह प्रारंभिक photo screening है। दवा देने से पहले स्थानीय कृषि विशेषज्ञ से पुष्टि करें।",
+        "hi": "🌿 *रोग जांच परिणाम*\nफसल: {crop}\nस्थिति: {disease}\nविश्वास: {confidence}%\n\n💊 *उपचार सुझाव:*\n{remedy}\n\n⚠️ यह शुरुआती फोटो जांच है। दवा देने से पहले स्थानीय कृषि विशेषज्ञ से पुष्टि करें।",
         "en": "🌿 *Disease Check Result*\nCrop: {crop}\nCondition: {disease}\nConfidence: {confidence}%\n\n💊 *Recommended Remedy:*\n{remedy}\n\n⚠️ This is an initial photo screening. Confirm with a local agricultural expert before treatment.",
         "mr": "🌿 *रोग तपासणी निकाल*\nपीक: {crop}\nस्थिती: {disease}\nविश्वास: {confidence}%\n\n💊 *उपाय:*\n{remedy}",
         "pa": "🌿 *ਰੋਗ ਜਾਂਚ ਨਤੀਜਾ*\nਫ਼ਸਲ: {crop}\nਹਾਲਤ: {disease}\nਭਰੋਸਾ: {confidence}%\n\n💊 *ਸੁਝਾਅ:*\n{remedy}\n\n⚠️ ਇਹ ਸ਼ੁਰੂਆਤੀ ਫੋਟੋ ਜਾਂਚ ਹੈ। ਦਵਾਈ ਤੋਂ ਪਹਿਲਾਂ ਸਥਾਨਕ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਪੁਸ਼ਟੀ ਕਰੋ।",

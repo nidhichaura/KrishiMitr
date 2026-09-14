@@ -11,7 +11,7 @@ if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyCon
 }
 $url = "http://127.0.0.1:$port"
 Write-Host "Starting KrishiMitr at $url" -ForegroundColor Green
-$serverCommand = "& '$pythonPath' -m uvicorn main:app --host 127.0.0.1 --port $port"
+$serverCommand = "& '$pythonPath' -m uvicorn main:app --reload --host 127.0.0.1 --port $port"
 $server = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoExit", "-Command", $serverCommand -PassThru
 $deadline = (Get-Date).AddSeconds(30)
 do {

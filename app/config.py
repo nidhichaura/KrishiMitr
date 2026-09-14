@@ -13,9 +13,14 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     TWILIO_AUTH_TOKEN: str = "mock_auth_token"
     TWILIO_WHATSAPP_NUMBER: str = "whatsapp:+14155238886"
-    # A voice-capable Twilio number, used for the keypad-phone IVR fallback.
-    # Leave unset until a production/demo voice number has been provisioned.
-    TWILIO_VOICE_NUMBER: str | None = None
+
+    # Exotel programmable voice / IVR. Set these only in .env (never commit
+    # account credentials). EXOTEL_PUBLIC_BASE_URL must be public HTTPS.
+    EXOTEL_ACCOUNT_SID: str | None = None
+    EXOTEL_API_KEY: str | None = None
+    EXOTEL_API_TOKEN: str | None = None
+    EXOTEL_EXOPHONE: str | None = None
+    EXOTEL_PUBLIC_BASE_URL: str | None = None
 
     # App
     APP_ENV: str = "development"
@@ -29,6 +34,12 @@ class Settings(BaseSettings):
     API_RATE_LIMIT_PER_MINUTE: int = 20
     # Digits only, e.g. 919876543210. Shown as the website's WhatsApp CTA.
     PUBLIC_WHATSAPP_NUMBER: str | None = None
+
+    # Consent-first business features. SQLite is adequate for a pilot; use a
+    # managed database and a secret manager before production rollout.
+    BUSINESS_DB_PATH: str = "data/krishimitr_business.db"
+    PARTNER_API_TOKEN: str | None = None
+    INSIGHTS_MINIMUM_COHORT: int = 20
 
     # External AI service base URLs (for future real integration)
     BHASHINI_API_URL: str = "https://mock-bhashini.local/api/v1"

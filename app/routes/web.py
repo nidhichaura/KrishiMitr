@@ -3,11 +3,12 @@ from pathlib import Path
 import re
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile, status
+from pydantic import BaseModel, Field
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, Response
 
 from app.config import settings
-from app.services import advisory_service, market_service, response_service, speech_service, vision_service
+from app.services import advisory_service, market_service, response_service, speech_service, vision_service, weather_service
 from app.utils.rate_limit import enforce_api_rate_limit
 
 router = APIRouter()
@@ -15,9 +16,48 @@ _INDEX = Path(__file__).resolve().parents[1] / "static" / "index.html"
 _ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 
 
+class AdvisoryInput(BaseModel):
+    crop: str | None = None
+    nitrogen: float = Field(ge=0, le=250)
+    phosphorus: float = Field(ge=0, le=150)
+    potassium: float = Field(ge=0, le=200)
+    ph: float = Field(ge=3.5, le=10)
+    temperature: float = Field(ge=0, le=55)
+    rainfall: float = Field(ge=0, le=500)
+    question: str | None = Field(default=None, max_length=500)
+
+
+@router.post("/api/advisory/recommend")
+async def field_advisory(request: Request, payload: AdvisoryInput):
+    enforce_api_rate_limit(request)
+    return {"result": advisory_service.recommend(**payload.model_dump())}
+
+
+@router.get("/api/advisory/weather")
+async def advisory_weather(request: Request, latitude: float, longitude: float):
+    enforce_api_rate_limit(request)
+    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
+        raise HTTPException(status_code=422, detail="Invalid location coordinates.")
+    result = await run_in_threadpool(weather_service.fetch_location_weather, latitude, longitude)
+    if result is None:
+        raise HTTPException(status_code=503, detail="Weather data is unavailable for this location right now.")
+    return {"result": result}
+
+
+@router.get("/api/location/reverse")
+async def reverse_location(request: Request, latitude: float, longitude: float, language: str = "en"):
+    enforce_api_rate_limit(request)
+    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
+        raise HTTPException(status_code=422, detail="Invalid location coordinates.")
+    label = await run_in_threadpool(weather_service.reverse_geocode, latitude, longitude, "hi" if language == "hi" else "en")
+    if not label:
+        raise HTTPException(status_code=503, detail="Location name is unavailable right now.")
+    return {"location_label": label}
+
+
 @router.get("/", include_in_schema=False)
 async def farmer_home():
-    number = re.sub(r"\D", "", settings.PUBLIC_WHATSAPP_NUMBER or "")
+    number = re.sub(r"\D", "", settings.PUBLIC_WHATSAPP_NUMBER or settings.TWILIO_WHATSAPP_NUMBER or "")
     whatsapp_link = f"https://wa.me/{number}" if number else "#help"
     page = _INDEX.read_text(encoding="utf-8").replace("__WHATSAPP_LINK__", whatsapp_link)
     return HTMLResponse(page.replace("__WHATSAPP_READY__", "true" if number else "false"))
@@ -65,15 +105,3 @@ async def market_price(request: Request, commodity: str, state: str, mandi: str 
     if result is None:
         raise HTTPException(status_code=404, detail="No verified mandi quote is available for this crop and state right now.")
     return {"result": result.model_dump()}
-
-
-@router.get("/api/advisory")
-async def crop_advisory(request: Request, crop: str, nitrogen: float, phosphorus: float, potassium: float, ph: float, latitude: float | None = None, longitude: float | None = None):
-    enforce_api_rate_limit(request)
-    if (latitude is None) != (longitude is None) or (latitude is not None and not (-90 <= latitude <= 90 and -180 <= longitude <= 180)):
-        raise HTTPException(status_code=422, detail="Provide both valid latitude and longitude, or leave both blank.")
-    try:
-        weather = await advisory_service.fetch_weather(latitude, longitude)
-        return {"result": advisory_service.build_advisory(crop, nitrogen, phosphorus, potassium, ph, weather)}
-    except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc

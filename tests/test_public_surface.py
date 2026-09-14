@@ -16,6 +16,11 @@ class PublicSurfaceTests(unittest.TestCase):
         health = self.client.get("/health")
         self.assertEqual(home.status_code, 200)
         self.assertIn("KrishiMitr", home.text)
+        self.assertIn("https://wa.me/14155238886", home.text)
+        self.assertIn("व्यक्तिगत सलाह के लिए अनुरोध", home.text)
+        self.assertIn('/static/i18n.js?v=4', home.text)
+        business_css = self.client.get("/static/business.css")
+        self.assertEqual(business_css.status_code, 200)
         self.assertEqual(health.json()["status"], "ok")
 
     def test_forged_webhook_is_rejected_when_verification_is_enabled(self):
@@ -36,22 +41,6 @@ class PublicSurfaceTests(unittest.TestCase):
             files={"image": ("unsafe.txt", b"not an image", "text/plain")},
         )
         self.assertEqual(response.status_code, 415)
-
-    def test_contextual_advisory_returns_nutrient_gap(self):
-        response = self.client.get("/api/advisory", params={"crop": "wheat", "nitrogen": 60, "phosphorus": 20, "potassium": 25, "ph": 6.8})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["result"]["nutrient_gap_kg_per_ha"]["N"], 60)
-
-    def test_keypad_phone_ivr_returns_a_hindi_menu(self):
-        original = settings.VERIFY_TWILIO_SIGNATURES
-        settings.VERIFY_TWILIO_SIGNATURES = False
-        try:
-            response = self.client.post("/webhook/ivr")
-        finally:
-            settings.VERIFY_TWILIO_SIGNATURES = original
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("<Gather", response.text)
-        self.assertIn("मंडी भाव", response.text)
 
 
 if __name__ == "__main__":

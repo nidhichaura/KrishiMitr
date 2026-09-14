@@ -9,7 +9,7 @@ from typing import Optional
 
 from app.core.constants import Intent
 from app.models.schemas import MarketPriceResult, DiseaseDetectionResult
-from app.utils.language_utils import translate
+from app.utils.language_utils import localize_model_label, translate
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -37,8 +37,8 @@ def build_disease_response(result: DiseaseDetectionResult, lang: str) -> str:
     return translate(
         "disease_result",
         lang,
-        crop=result.crop_guess,
-        disease=result.disease_name,
+        crop=localize_model_label(result.crop_guess, lang),
+        disease=localize_model_label(result.disease_name, lang),
         confidence=round(result.confidence * 100, 1),
         remedy=result.remedy,
     )

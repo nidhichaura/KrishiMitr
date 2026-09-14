@@ -119,21 +119,6 @@ the source so the trained checkpoint is copied into the image.
 3. Join the sandbox from your phone (send the `join <code>` message Twilio
    gives you), then message it — text, a voice note, or a leaf photo.
 
-## Basic-phone fallback: SMS and IVR
-
-WhatsApp and leaf-photo diagnosis require a smartphone. For a 2G/3G basic
-keypad phone, configure a **voice-capable** Twilio number with these public
-HTTPS webhooks:
-
-| Channel | Twilio webhook | Farmer experience |
-| --- | --- | --- |
-| Incoming SMS | `https://<domain>/webhook/sms` | Text `भाव गेहूं उत्तर प्रदेश` to receive a mandi-price reply. |
-| Incoming voice call | `https://<domain>/webhook/ivr` | Call KrishiMitr and press 1/2/3 to hear the Hindi menu. |
-
-Set `TWILIO_VOICE_NUMBER` in `.env` after purchasing/provisioning that number.
-This is a real fallback, not WhatsApp on a keypad phone: photo diagnosis is
-only available through the smartphone WhatsApp/web flow.
-
 ## Testing without Twilio
 
 Since the webhook just needs standard form-encoded POST data, you can hit it
@@ -193,6 +178,31 @@ PUBLIC_BASE_URL=https://your-ngrok-domain.ngrok-free.app
 webhook. A farmer who sends a voice note then receives both the text response
 and a playable audio reply. If the key/service is unavailable, the app asks the
 farmer to repeat the message rather than fabricating a transcript.
+
+## Consent-first pilot and business foundation
+
+The farmer website includes an optional personalised-advisory interest form.
+It stores a one-way identifier, stated location/language and an explicit
+opt-in choice in SQLite. It does not store phone numbers, messages or uploaded
+leaf photos in the business database. Partner reporting returns only aggregate
+counts after the configured minimum cohort and needs a bearer token.
+
+The pilot foundation does not create a real payment, yield forecast, telecom
+zero-rating or partner contract. Those require an external payment provider, a
+validated agronomic model with local farm/weather data, and formal agreements.
+
+### Pilot configuration
+
+1. Set a strong `PARTNER_API_TOKEN` and a production `BUSINESS_DB_PATH` in
+   `.env`. Leave the partner endpoint disabled until that token exists.
+2. Start the service and let a test farmer submit the optional pilot form at
+   `/`. Confirm that the partner endpoint requires the bearer token and returns
+   only grouped data.
+3. Use the aggregated metrics with a named FPO, NGO, government department,
+   insurer or input-company pilot. Do not present a partnership as active until
+   a written agreement exists.
+4. Add a payment provider and a verified agronomist workflow before charging
+   for personalised advisory. A plan request is only an interest record.
 
 ## Notes / known limitations
 

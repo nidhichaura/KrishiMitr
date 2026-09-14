@@ -43,10 +43,10 @@ _MODEL_CROP_PREFIXES = {
 
 _PUNJABI_REMEDIES = {
     "Healthy": "ਫ਼ਸਲ ਸਿਹਤਮੰਦ ਲੱਗਦੀ ਹੈ। ਨਿਯਮਤ ਨਿਗਰਾਨੀ ਅਤੇ ਸੰਤੁਲਿਤ ਖਾਦ ਜਾਰੀ ਰੱਖੋ।",
-    "Tomato___Early_Blight": "ਪ੍ਰਭਾਵਿਤ ਪੱਤੇ ਹਟਾਓ। ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਨਾਲ ਮੈਂਕੋਜ਼ੇਬ ਜਾਂ ਕਲੋਰੋਥੈਲੋਨਿਲ ਆਧਾਰਿਤ ਫਫੂੰਦਨਾਸ਼ਕ ਵਰਤੋ ਅਤੇ ਫ਼ਸਲ ਚੱਕਰ ਅਪਣਾਓ।",
-    "Tomato___Late_Blight": "ਖੇਤ ਵਿੱਚ ਪਾਣੀ ਦੀ ਨਿਕਾਸੀ ਸੁਧਾਰੋ ਅਤੇ ਗਿੱਲੇ ਮੌਸਮ ਵਿੱਚ ਫ਼ਸਲ ਨੂੰ ਧਿਆਨ ਨਾਲ ਦੇਖੋ। ਦਵਾਈ ਲਈ ਸਥਾਨਕ ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਲਓ।",
-    "Potato___Early_Blight": "ਪ੍ਰਭਾਵਿਤ ਪੱਤੇ ਹਟਾਓ ਅਤੇ ਹਵਾ ਦੀ ਆਵਾਜਾਈ ਲਈ ਢੁੱਕਵਾਂ ਫ਼ਾਸਲਾ ਰੱਖੋ। ਦਵਾਈ ਲਈ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਗੱਲ ਕਰੋ।",
-    "Potato___Late_Blight": "ਸੰਕਰਮਿਤ ਪੌਦਿਆਂ ਨੂੰ ਵੱਖ ਕਰੋ, ਖੇਤ ਵਿੱਚ ਪਾਣੀ ਨਾ ਖੜ੍ਹਨ ਦਿਓ ਅਤੇ ਤੁਰੰਤ ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਲਓ।",
+    "Tomato___Early_blight": "ਪ੍ਰਭਾਵਿਤ ਪੱਤੇ ਹਟਾਓ। ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਨਾਲ ਮੈਂਕੋਜ਼ੇਬ ਜਾਂ ਕਲੋਰੋਥੈਲੋਨਿਲ ਆਧਾਰਿਤ ਫਫੂੰਦਨਾਸ਼ਕ ਵਰਤੋ ਅਤੇ ਫ਼ਸਲ ਚੱਕਰ ਅਪਣਾਓ।",
+    "Tomato___Late_blight": "ਖੇਤ ਵਿੱਚ ਪਾਣੀ ਦੀ ਨਿਕਾਸੀ ਸੁਧਾਰੋ ਅਤੇ ਗਿੱਲੇ ਮੌਸਮ ਵਿੱਚ ਫ਼ਸਲ ਨੂੰ ਧਿਆਨ ਨਾਲ ਦੇਖੋ। ਦਵਾਈ ਲਈ ਸਥਾਨਕ ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਲਓ।",
+    "Potato___Early_blight": "ਪ੍ਰਭਾਵਿਤ ਪੱਤੇ ਹਟਾਓ ਅਤੇ ਹਵਾ ਦੀ ਆਵਾਜਾਈ ਲਈ ਢੁੱਕਵਾਂ ਫ਼ਾਸਲਾ ਰੱਖੋ। ਦਵਾਈ ਲਈ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਗੱਲ ਕਰੋ।",
+    "Potato___Late_blight": "ਸੰਕਰਮਿਤ ਪੌਦਿਆਂ ਨੂੰ ਵੱਖ ਕਰੋ, ਖੇਤ ਵਿੱਚ ਪਾਣੀ ਨਾ ਖੜ੍ਹਨ ਦਿਓ ਅਤੇ ਤੁਰੰਤ ਖੇਤੀ ਮਾਹਿਰ ਦੀ ਸਲਾਹ ਲਓ।",
     "Wheat___Leaf_Rust": "ਸੰਕਰਮਣ ਦੀ ਨਿਗਰਾਨੀ ਕਰੋ ਅਤੇ ਅਗਲੀ ਬਿਜਾਈ ਲਈ ਰੋਗ-ਰੋਧੀ ਕਿਸਮ ਚੁਣੋ। ਉਚਿਤ ਦਵਾਈ ਲਈ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਪੁੱਛੋ।",
     "Wheat___Powdery_Mildew": "ਖੇਤ ਵਿੱਚ ਹਵਾ ਦੀ ਆਵਾਜਾਈ ਬਣਾਈ ਰੱਖੋ ਅਤੇ ਉਚਿਤ ਇਲਾਜ ਲਈ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਸਲਾਹ ਕਰੋ।",
     "Cotton___Bacterial_Blight": "ਪ੍ਰਭਾਵਿਤ ਪੱਤਿਆਂ ਨੂੰ ਹਟਾਓ ਅਤੇ ਅਗਲੀ ਬਿਜਾਈ ਤੋਂ ਪਹਿਲਾਂ ਬੀਜ ਇਲਾਜ ਬਾਰੇ ਖੇਤੀ ਮਾਹਿਰ ਨਾਲ ਸਲਾਹ ਕਰੋ।",
@@ -191,19 +191,13 @@ def analyze_leaf_image(
     """
     Full CV pipeline: preprocess -> CNN inference -> map to remedy.
     """
-    # PlantVillage is a disease classifier, not a plant-species identifier.
-    # With no crop supplied it must force every leaf (including rose leaves)
-    # into one of its training labels. Requiring the crop prevents the unsafe
-    # "high confidence but wrong plant" result seen in the WhatsApp demo.
-    if not expected_crop:
-        raise MissingDiseaseCropError("A supported crop name is required for disease screening.")
-    if expected_crop not in _MODEL_CROP_PREFIXES:
+    if expected_crop and expected_crop not in _MODEL_CROP_PREFIXES:
         raise UnsupportedDiseaseCropError("This crop is not supported by the disease model yet.")
 
     preprocessed = preprocess_image(image_bytes)
     model = get_disease_model()
-    expected_prefix = _MODEL_CROP_PREFIXES[expected_crop]
-    if hasattr(model, "predict_for_crop"):
+    expected_prefix = _MODEL_CROP_PREFIXES.get(expected_crop or "")
+    if expected_prefix and hasattr(model, "predict_for_crop"):
         label, confidence, crop_probability = model.predict_for_crop(preprocessed, expected_prefix)
         if crop_probability < MIN_SELECTED_CROP_PROBABILITY:
             logger.info(
@@ -218,7 +212,7 @@ def analyze_leaf_image(
         required_confidence = 0.80
     else:
         label, confidence = model.predict(preprocessed)
-        if not label.startswith(expected_prefix):
+        if expected_prefix and not label.startswith(expected_prefix):
             logger.info("Rejected crop mismatch: requested=%s predicted=%s", expected_crop, label)
             raise CropMismatchPhotoError("The image does not match the stated crop.")
         required_confidence = MIN_DISEASE_CONFIDENCE

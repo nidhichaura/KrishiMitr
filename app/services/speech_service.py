@@ -9,7 +9,7 @@ import httpx
 from app.config import settings
 from app.core.constants import Intent, COMMODITY_KEYWORDS
 from app.models.schemas import TranscriptionResult, IntentResult
-from app.utils.language_utils import detect_user_language
+from app.utils.language_utils import detect_response_language
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -234,6 +234,6 @@ def process_text_input(text: str) -> Tuple[str, IntentResult, str]:
     detect language + detect intent in one call.
     Returns: (original_text, intent_result, detected_language)
     """
-    lang = detect_user_language(text)
+    lang = detect_response_language(text)
     intent_result = detect_intent(text)
     return text, intent_result, lang

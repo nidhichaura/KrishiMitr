@@ -6,15 +6,8 @@
 <meta name="theme-color" content="#176b42">
 <title>KrishiMitr — किसान का साथी</title>
 <link rel="stylesheet" href="/static/style.css">
-<style>
-  .advisory-choice { background: linear-gradient(135deg, #245a91, #4e93c6); }
-  .npk-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; }
-  .npk-grid label { font-weight:800; font-size:.9rem; }
-  .npk-grid input { display:block; width:100%; margin-top:6px; border:1px solid #9eb39c; border-radius:8px; padding:12px; font:inherit; }
-  .location-button { margin-top:14px; border:1px solid #5b88b7; background:#eef6ff; color:#164f86; border-radius:9px; padding:10px; font:700 .9rem inherit; cursor:pointer; }
-  @media (min-width:701px) { .choice-grid { grid-template-columns:repeat(3, 1fr); } }
-  @media (max-width:700px) { .npk-grid { grid-template-columns:repeat(2, 1fr); } }
-</style>
+<link rel="stylesheet" href="/static/business.css?v=3">
+<link rel="stylesheet" href="/static/hackathon.css?v=2">
 </head>
 <body>
 
@@ -25,7 +18,6 @@
     <select id="language" data-i18n-aria="aria_language_select" aria-label="अपनी भाषा चुनें">
       <option value="hi">हिंदी</option>
       <option value="en">English</option>
-      <option value="pa">ਪੰਜਾਬੀ</option>
     </select>
   </div>
 </header>
@@ -47,17 +39,9 @@
       <small data-i18n="choice_photo_desc">बीमारी की शुरुआती जांच</small>
       <b data-i18n="choice_photo_cta">फोटो लें →</b>
     </a>
-    <a class="choice price-choice" href="#price">
-      <span class="choice-icon">📊</span>
-      <strong data-i18n="choice_price_title">आज का मंडी भाव</strong>
-      <small data-i18n="choice_price_desc">सरकारी स्रोत से थोक मूल्य</small>
-      <b data-i18n="choice_price_cta">भाव देखें →</b>
-    </a>
-    <a class="choice advisory-choice" href="#advisory">
-      <span class="choice-icon">🧪</span>
-      <strong>फसल और मिट्टी सलाह</strong>
-      <small>मौसम और NPK के आधार पर</small>
-      <b>सलाह देखें →</b>
+    <a class="choice market-choice" href="#marketplace">
+      <span class="choice-icon">🤝</span><strong data-i18n="choice_market_title">फसल खरीदें या बेचें</strong>
+      <small data-i18n="choice_market_desc">आज की बोली लगाएं और खरीदारों से जुड़ें</small><b data-i18n="choice_market_cta">बाज़ार खोलें →</b>
     </a>
   </section>
 
@@ -68,6 +52,7 @@
         <p class="eyebrow" data-i18n="eyebrow_steps">बस तीन कदम</p>
         <h2 data-i18n="h2_disease">पत्ते की फोटो से जांच</h2>
       </div>
+      <button class="section-speak" type="button" data-speak-key="photo" aria-label="फोटो जांच के निर्देश सुनें">🔊</button>
     </div>
     <ol class="picture-steps">
       <li><span>☀️</span><span data-i18n="step1">अच्छी रोशनी में एक पत्ते की फोटो लें</span></li>
@@ -77,66 +62,57 @@
     <form id="disease-form" novalidate>
       <input type="hidden" name="language" value="hi">
       <input type="hidden" name="crop" id="selected-crop">
-      <fieldset>
-        <legend><span data-i18n="legend_crop_optional">पहले फसल चुनें</span> <small data-i18n="legend_crop_optional_small">(नहीं पता? छोड़ दें)</small></legend>
-        <div class="chips" role="group" data-i18n-aria="aria_crop_group" aria-label="फसल चुनें">
-          <button type="button" class="crop-chip" data-crop="tomato">🍅 टमाटर</button>
-          <button type="button" class="crop-chip" data-crop="potato">🥔 आलू</button>
-          <button type="button" class="crop-chip" data-crop="maize">🌽 मक्का</button>
-          <button type="button" class="crop-chip" data-crop="soybean">🫘 सोयाबीन</button>
-        </div>
-      </fieldset>
-      <label class="camera-button">
-        <input name="image" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" required>
-        <span class="camera-icon">📷</span>
-        <strong data-i18n="camera_open">कैमरा / गैलरी खोलें</strong>
-        <small id="file-name" data-i18n="choose_leaf_photo">एक साफ पत्ते की फोटो चुनें</small>
+      <div class="auto-leaf-note"><span>✨</span><div><strong data-i18n="auto_leaf_title">AI खुद पत्ते और बीमारी की पहचान करेगा</strong><small data-i18n="auto_leaf_note">बस एक साफ पत्ते की फोटो चुनें।</small></div></div>
+      <label class="file-choice-card">
+        <input id="gallery-image" type="file" accept="image/jpeg,image/png,image/webp" required>
+        <span class="source-icon">🖼️</span><strong data-i18n="file_choose">फोटो फ़ाइल चुनें</strong>
+        <small data-i18n="file_choose_tip">फोन या कंप्यूटर से पत्ते की साफ फोटो चुनें</small><b data-i18n="file_choose_cta">फ़ाइल चुनें →</b>
       </label>
+      <p class="photo-selected" id="file-name" data-i18n="choose_leaf_photo">एक साफ पत्ते की फोटो चुनें</p>
+      <div class="photo-preview hidden" id="photo-preview" aria-live="polite"><img id="leaf-preview-image" alt="चुने हुए पत्ते की फोटो का प्रीव्यू"><div><strong id="photo-preview-title" data-i18n="photo_ready">फोटो जांच के लिए तैयार है</strong><small data-i18n="photo_ready_tip">साफ दिखाई दे रही है? अब फोटो जांचें दबाएं।</small><button type="button" id="change-photo" data-i18n="change_photo">फोटो बदलें</button></div></div>
+      <p class="cv-assurance"><span>✓</span> <span data-i18n="opencv_assurance">फोटो की सफ़ाई और पत्ते की पहचान OpenCV से जांची जाती है।</span></p>
       <button class="primary-action" type="submit"><span data-i18n="btn_check_photo">फोटो जांचें</span> <span>→</span></button>
     </form>
     <div class="result hidden" id="disease-result" aria-live="assertive"></div>
   </section>
 
-  <section class="guide advisory-guide" id="advisory">
-    <div class="section-heading"><span>3</span><div><p class="eyebrow">आपके खेत के लिए</p><h2>फसल और मिट्टी सलाह</h2></div></div>
-    <p class="simple-note">अपनी मिट्टी जाँच रिपोर्ट के N, P, K (kg/ha) और pH भरें। GPS अनुमति देने पर 7 दिन का मौसम भी जोड़ा जाएगा।</p>
-    <form id="advisory-form" novalidate>
-      <label class="select-label"><span>फसल चुनें</span><select name="crop" required><option value="wheat">🌾 गेहूं</option><option value="rice">🍚 धान</option><option value="maize">🌽 मक्का</option><option value="soybean">🫘 सोयाबीन</option><option value="tomato">🍅 टमाटर</option></select></label>
-      <div class="npk-grid"><label>N (kg/ha)<input name="nitrogen" type="number" min="0" step="0.1" required placeholder="e.g. 65"></label><label>P (kg/ha)<input name="phosphorus" type="number" min="0" step="0.1" required placeholder="e.g. 18"></label><label>K (kg/ha)<input name="potassium" type="number" min="0" step="0.1" required placeholder="e.g. 120"></label><label>pH<input name="ph" type="number" min="0" max="14" step="0.1" required placeholder="e.g. 6.8"></label></div>
-      <input type="hidden" name="latitude"><input type="hidden" name="longitude">
-      <button class="location-button" type="button" id="use-location">📍 मेरा खेत स्थान जोड़ें (वैकल्पिक)</button>
-      <button class="primary-action" type="submit">फसल सलाह पाएं <span>→</span></button>
-    </form>
-    <div class="result hidden" id="advisory-result" aria-live="assertive"></div>
+  <section class="guide marketplace-guide" id="marketplace">
+    <div class="section-heading"><span>2</span><div><p class="eyebrow" data-i18n="marketplace_eyebrow">सीधा किसान बाज़ार</p><h2 data-i18n="marketplace_title">आज की फसल बोली</h2></div><button class="section-speak" type="button" data-speak-key="marketplace" aria-label="बाज़ार के निर्देश सुनें">🔊</button></div>
+    <div class="marketplace-intro"><div><strong data-i18n="marketplace_today">आज,</strong> <strong id="marketplace-date"></strong><p data-i18n="marketplace_intro">फसल सूची देखें, अपनी उपज बेचें, या अपनी खरीद की दैनिक बोली लगाएं।</p></div><span class="market-live"><i></i> <span data-i18n="marketplace_live">लाइव बोली</span></span></div>
+    <div class="trade-switch" role="tablist" data-i18n-aria="aria_marketplace_tabs" aria-label="खरीदें या बेचें"><button class="trade-tab active" type="button" data-trade-mode="buy" role="tab" aria-selected="true" data-i18n="marketplace_buy">🛒 फसल खरीदें</button><button class="trade-tab" type="button" data-trade-mode="sell" role="tab" aria-selected="false" data-i18n="marketplace_sell">🌾 फसल बेचें</button></div>
+    <details class="mandi-lookup" open><summary><span>📊</span> <strong data-i18n="merged_mandi_title">आज का मंडी भाव देखें</strong><small data-i18n="merged_mandi_note">किसी भी फसल, राज्य और मंडी का सत्यापित थोक भाव</small></summary><form id="market-form" novalidate><input type="hidden" name="language" value="hi"><input type="hidden" name="commodity" id="selected-commodity"><fieldset><legend data-i18n="legend_crop">फसल चुनें</legend><div class="chips" role="group" data-i18n-aria="aria_market_crop_group" aria-label="मंडी के लिए फसल चुनें"></div></fieldset><div class="mandi-fields"><label class="select-label"><span data-i18n="state_label">अपना राज्य चुनें</span><select name="state" required></select></label></div><details><summary data-i18n="mandi_summary">मंडी का नाम पता है? (वैकल्पिक)</summary><input name="mandi" data-i18n-placeholder="mandi_placeholder" placeholder="जैसे Azadpur"></details><button class="primary-action" type="submit"><span data-i18n="btn_see_price">आज का भाव देखें</span> <span>→</span></button></form><div class="result hidden" id="market-result" aria-live="assertive"></div></details>
+    <div class="marketplace-layout"><div class="market-listings"><div class="listing-heading"><div><p class="eyebrow" id="listing-eyebrow" data-i18n="marketplace_available">आज उपलब्ध</p><h3 id="listing-title" data-i18n="marketplace_nearby">पास की फसलें</h3></div></div><div class="market-filters"><label><span data-i18n="filter_crop">फसल</span><select id="crop-filter" multiple size="4" data-i18n-aria="filter_crop"><option value="all" selected data-i18n="filter_all_crops">सभी फसलें</option><option value="गेहूँ" data-i18n="listing_wheat">गेहूँ</option><option value="टमाटर" data-i18n="listing_tomato">टमाटर</option><option value="मक्का" data-i18n="listing_maize">मक्का</option></select><small data-i18n="filter_multiple_hint">एक से अधिक चुनने के लिए Ctrl/Cmd दबाएं</small></label><label><span data-i18n="filter_state">राज्य</span><select id="state-filter" multiple size="4" data-i18n-aria="filter_state"><option value="all" selected data-i18n="filter_all_states">सभी राज्य</option><option value="haryana" data-i18n="state_haryana">हरियाणा</option><option value="maharashtra" data-i18n="state_maharashtra">महाराष्ट्र</option><option value="madhya-pradesh" data-i18n="state_madhya_pradesh">मध्य प्रदेश</option></select><small data-i18n="filter_multiple_hint">एक से अधिक चुनने के लिए Ctrl/Cmd दबाएं</small></label><label><span data-i18n="filter_variety">फसल की किस्म</span><select id="variety-filter"><option value="all" data-i18n="filter_all_varieties">सभी किस्में</option><option value="grade-a" data-i18n="variety_grade_a">ग्रेड A</option><option value="hybrid" data-i18n="variety_hybrid">हाइब्रिड</option><option value="organic" data-i18n="variety_organic">जैविक</option></select></label><label><span data-i18n="filter_price_type">मूल्य प्रकार</span><select id="price-filter"><option value="all" data-i18n="filter_all_prices">सभी मूल्य</option><option value="msp" data-i18n="filter_msp">MSP मूल्य</option><option value="bid" data-i18n="filter_bid">बोली मूल्य</option></select></label><label><span data-i18n="filter_min_price">न्यूनतम कीमत</span><input id="min-price-filter" type="number" min="0" placeholder="₹ 0"></label></div><p id="filter-empty" class="filter-empty hidden" data-i18n="filter_empty">इस फ़िल्टर के लिए कोई फसल नहीं मिली।</p><div class="listing-grid">
+      <article class="crop-listing" data-crop="गेहूँ" data-price="2425" data-type="msp" data-mode="sell" data-state="haryana" data-variety="grade-a"><span class="crop-art">🌾</span><div><h4 data-i18n="listing_wheat">गेहूँ</h4><p data-i18n="listing_wheat_meta">Grade A · 42 क्विंटल</p><small data-i18n="listing_wheat_location">📍 करनाल, हरियाणा</small></div><div class="listing-price"><em data-i18n="filter_msp">MSP मूल्य</em><strong>₹2,425</strong><span data-i18n="marketplace_per_quintal">₹ / क्विंटल</span></div></article>
+      <article class="crop-listing" data-crop="टमाटर" data-price="1850" data-type="bid" data-mode="sell" data-state="maharashtra" data-variety="hybrid"><span class="crop-art tomato">🍅</span><div><h4 data-i18n="listing_tomato">टमाटर</h4><p data-i18n="listing_tomato_meta">Farm fresh · 18 क्विंटल</p><small data-i18n="listing_tomato_location">📍 नासिक, महाराष्ट्र</small></div><div class="listing-price"><em data-i18n="filter_bid">बोली मूल्य</em><strong>₹1,850</strong><span data-i18n="marketplace_per_quintal">₹ / क्विंटल</span></div></article>
+      <article class="crop-listing" data-crop="मक्का" data-price="2210" data-type="msp" data-mode="sell"><span class="crop-art corn">🌽</span><div><h4 data-i18n="listing_maize">मक्का</h4><p data-i18n="listing_maize_meta">Dry grain · 60 क्विंटल</p><small data-i18n="listing_maize_location">📍 इंदौर, मध्य प्रदेश</small></div><div class="listing-price"><em data-i18n="filter_msp">MSP मूल्य</em><strong>₹2,210</strong><span data-i18n="marketplace_per_quintal">₹ / क्विंटल</span></div></article>
+      <article class="crop-listing" data-crop="गेहूँ" data-price="2480" data-type="bid" data-mode="buy"><span class="crop-art">🌾</span><div><h4 data-i18n="listing_wheat">गेहूँ</h4><p data-i18n="buy_wheat_meta">खरीद आवश्यकता · 35 क्विंटल</p><small>📍 <a class="map-link" href="https://www.openstreetmap.org/?mlat=29.3909&mlon=76.9635#map=14/29.3909/76.9635" target="_blank" rel="noopener" data-i18n="buy_wheat_location">पानीपत, हरियाणा · नक्शा देखें</a></small></div><div class="listing-price"><em data-i18n="filter_bid">बोली मूल्य</em><strong>₹2,480</strong><span data-i18n="marketplace_per_quintal">₹ / क्विंटल</span></div></article>
+      <article class="crop-listing" data-crop="मक्का" data-price="2260" data-type="bid" data-mode="buy"><span class="crop-art corn">🌽</span><div><h4 data-i18n="listing_maize">मक्का</h4><p data-i18n="buy_maize_meta">खरीद आवश्यकता · 50 क्विंटल</p><small>📍 <a class="map-link" href="https://www.openstreetmap.org/?mlat=22.9676&mlon=76.0530#map=14/22.9676/76.0530" target="_blank" rel="noopener" data-i18n="buy_maize_location">देवास, मध्य प्रदेश · नक्शा देखें</a></small></div><div class="listing-price"><em data-i18n="filter_bid">बोली मूल्य</em><strong>₹2,260</strong><span data-i18n="marketplace_per_quintal">₹ / क्विंटल</span></div></article>
+    </div></div><aside class="bid-card"><div class="bid-card-head"><span id="bid-mode-label" data-i18n="marketplace_buying_for">खरीदने के लिए</span><strong data-i18n="marketplace_place_bid">अपनी बोली लगाएं</strong><p id="bid-help" data-i18n="marketplace_buy_help">अच्छी बोली विक्रेताओं को तुरंत दिखाई देगी।</p></div><form id="bid-form" novalidate><label><span data-i18n="marketplace_crop">फसल</span><select name="crop" id="bid-crop" required><option value="" data-i18n="marketplace_choose_crop">फसल चुनें</option><option data-i18n="listing_wheat">गेहूँ</option><option data-i18n="listing_tomato">टमाटर</option><option data-i18n="listing_maize">मक्का</option><option data-i18n="crop_rice">धान</option><option data-i18n="crop_onion">प्याज</option><option data-i18n="crop_soybean">सोयाबीन</option></select></label><div class="bid-fields"><label><span data-i18n="marketplace_quantity">मात्रा</span><input name="quantity" type="number" min="1" data-i18n-placeholder="marketplace_quantity_placeholder" placeholder="जैसे 20" required><small data-i18n="marketplace_quintal">क्विंटल</small></label><label><span data-i18n="marketplace_bid_price">बोली कीमत</span><input name="price" id="bid-price" type="number" min="1" data-i18n-placeholder="marketplace_price_placeholder" placeholder="₹ प्रति क्विंटल" required><small data-i18n="marketplace_per_quintal">₹ / क्विंटल</small></label></div><label><span data-i18n="marketplace_location">मंडी / स्थान</span><input name="location" data-i18n-placeholder="marketplace_location_placeholder" placeholder="जैसे करनाल, हरियाणा" required></label><label><span data-i18n="marketplace_date">बोली की तारीख</span><input name="bid_date" id="bid-date" type="date" required></label><button class="place-bid" type="submit"><span id="bid-button-label" data-i18n="marketplace_buy_bid">खरीद बोली लगाएं</span> <span>→</span></button></form><p class="bid-note" data-i18n="marketplace_privacy">🔒 आपका संपर्क केवल आपकी सहमति के बाद साझा किया जाएगा।</p><div id="bid-result" class="bid-result hidden" aria-live="polite"></div></aside></div>
   </section>
 
-  <section class="guide price-guide" id="price">
-    <div class="section-heading">
-      <span>2</span>
-      <div>
-        <p class="eyebrow" data-i18n="eyebrow_price">आज का सही भाव</p>
-        <h2 data-i18n="h2_price">मंडी भाव देखें</h2>
-      </div>
-    </div>
-    <p class="simple-note" data-i18n="simple_note">पहले अपनी फसल और राज्य दबाएं। मंडी का नाम देना जरूरी नहीं है।</p>
-    <form id="market-form" novalidate>
-      <input type="hidden" name="language" value="hi">
-      <input type="hidden" name="commodity" id="selected-commodity">
-      <fieldset>
-        <legend data-i18n="legend_crop">फसल चुनें</legend>
-        <div class="chips" role="group" data-i18n-aria="aria_market_crop_group" aria-label="मंडी के लिए फसल चुनें"></div>
-      </fieldset>
-      <label class="select-label">
-        <span data-i18n="state_label">अपना राज्य चुनें</span>
-        <select name="state" required></select>
-      </label>
-      <details>
-        <summary data-i18n="mandi_summary">मंडी का नाम पता है? (वैकल्पिक)</summary>
-        <input name="mandi" data-i18n-placeholder="mandi_placeholder" placeholder="जैसे Azadpur">
-      </details>
-      <button class="primary-action" type="submit"><span data-i18n="btn_see_price">आज का भाव देखें</span> <span>→</span></button>
+  <section class="guide advisory-guide" id="advisory">
+    <div class="section-heading"><span>3</span><div><p class="eyebrow" data-i18n="advisory_eyebrow">AI खेत सलाह</p><h2 data-i18n="advisory_title">मिट्टी और मौसम के अनुसार सलाह</h2></div><button class="section-speak" type="button" data-speak-key="advisory" aria-label="खेत सलाह के निर्देश सुनें">🔊</button></div>
+    <p class="simple-note" data-i18n="advisory_note">मिट्टी जांच की NPK रिपोर्ट और अपने खेत की स्थिति भरें। AI आपको फसल की अनुकूलता और अगला कदम बताएगा।</p>
+    <form id="advisory-form"><div class="advisory-grid"><label><span data-i18n="advisory_crop">वर्तमान / पसंदीदा फसल</span><select name="crop" id="advisory-crop"><option value="" data-i18n="advisory_any_crop">फसल चुनें या AI से सुझाव लें</option><option value="Wheat" data-i18n="listing_wheat">गेहूँ</option><option value="Rice" data-i18n="crop_rice">धान</option><option value="Maize" data-i18n="listing_maize">मक्का</option><option value="Tomato" data-i18n="listing_tomato">टमाटर</option><option value="Soybean" data-i18n="crop_soybean">सोयाबीन</option><option value="Onion" data-i18n="crop_onion">प्याज</option><option value="__other__" data-i18n="advisory_other_crop">अन्य फसल लिखें</option></select></label><label class="advisory-other-crop hidden" id="advisory-other-crop"><span data-i18n="advisory_other_crop_label">अपनी फसल का नाम लिखें</span><input name="custom_crop" maxlength="60" data-i18n-placeholder="advisory_other_crop_placeholder" placeholder="जैसे: बाजरा"></label><label><span data-i18n="advisory_temp">औसत तापमान °C</span><input name="temperature" type="number" min="0" max="55" value="25" required></label><label><span data-i18n="advisory_rain">हाल की / अनुमानित बारिश (mm)</span><input name="rainfall" type="number" min="0" max="500" value="80" required></label><label><span data-i18n="advisory_n">नाइट्रोजन (N)</span><input name="nitrogen" type="number" min="0" max="250" value="60" required></label><label><span data-i18n="advisory_p">फॉस्फोरस (P)</span><input name="phosphorus" type="number" min="0" max="150" value="40" required></label><label><span data-i18n="advisory_k">पोटैशियम (K)</span><input name="potassium" type="number" min="0" max="200" value="35" required></label><label><span data-i18n="advisory_ph">मिट्टी pH</span><input name="ph" type="number" min="3.5" max="10" step="0.1" value="6.5" required></label></div><label class="advisory-question"><span data-i18n="advisory_question">अपना सवाल पूछें (वैकल्पिक)</span><input name="question" data-i18n-placeholder="advisory_question_placeholder" placeholder="जैसे: क्या इस महीने मक्का बोना सही है?"></label><button class="primary-action advisory-action" type="submit"><span data-i18n="advisory_submit">AI खेत सलाह देखें</span> <span>→</span></button></form><p class="advisory-safety" data-i18n="advisory_safety">⚠️ यह निर्णय-सहायता है, उर्वरक की निश्चित मात्रा नहीं। अंतिम मात्रा मिट्टी जांच और स्थानीय कृषि अधिकारी से तय करें।</p><div class="result hidden" id="advisory-result" aria-live="assertive"></div>
+  </section>
+
+  <section class="guide pilot-guide" id="pilot">
+    <div class="section-heading"><span>4</span><div><p class="eyebrow" data-i18n="pilot_eyebrow">पायलट सुविधा</p><h2 data-i18n="pilot_title">व्यक्तिगत सलाह के लिए अनुरोध</h2></div><button class="section-speak" type="button" data-speak-key="pilot" aria-label="सहायता के निर्देश सुनें">🔊</button></div>
+    <p class="simple-note" data-i18n="pilot_note">बीमारी जांच और मंडी भाव निःशुल्क हैं। केवल अपनी इच्छा से जानकारी दें। आपकी स्पष्ट सहमति पर ही पायलट की गुमनाम जानकारी उपयोग होगी।</p>
+    <form id="pilot-form" novalidate>
+      <label class="select-label"><span data-i18n="pilot_identifier_label">मोबाइल नंबर या ईमेल</span><input name="identifier" required minlength="3" autocomplete="tel"></label>
+      <label class="select-label"><span data-i18n="pilot_district_label">जिला (वैकल्पिक)</span><input name="district" autocomplete="address-level2"></label>
+      <label class="select-label"><span data-i18n="pilot_state_label">राज्य (वैकल्पिक)</span><input name="state" autocomplete="address-level1"></label>
+      <label class="consent"><input name="consent_insights" type="checkbox"><span data-i18n="pilot_consent">मैं कृषिमित्र को अपनी गतिविधि केवल गुमनाम और समूह-आधारित पायलट जानकारी में शामिल करने की अनुमति देता/देती हूँ। मेरा मोबाइल नंबर, संदेश और फोटो साझा नहीं किए जाएंगे।</span></label>
+      <button class="primary-action" type="submit"><span data-i18n="pilot_submit">अनुरोध भेजें</span> <span>→</span></button>
     </form>
-    <div class="result hidden" id="market-result" aria-live="assertive"></div>
+    <div class="result hidden" id="pilot-result" aria-live="assertive"></div>
+  </section>
+
+  <section class="data-declaration" aria-labelledby="declaration-title">
+    <div class="declaration-icon">🔐</div>
+    <div><strong id="declaration-title">आपकी अनुमति, आपका नियंत्रण</strong><p id="declaration-copy">मैं सहमत हूँ कि मेरी जानकारी और संदेशों का उपयोग केवल गुमनाम तरीके से कृषिमित्र सेवा बेहतर बनाने के लिए किया जा सकता है।</p></div>
+    <label class="declaration-check"><input id="data-declaration" type="checkbox"><span id="declaration-label">मैं सहमत हूँ</span></label>
   </section>
 
   <section class="safety">
@@ -154,8 +130,8 @@
   <a class="whatsapp" id="whatsapp-link" href="__WHATSAPP_LINK__" target="_blank" rel="noopener"><span data-i18n="whatsapp_cta">WhatsApp पर बात करें ↗</span></a>
 </footer>
 
-<script src="/static/i18n.js"></script>
-<script src="/static/app.js"></script>
+<script src="/static/i18n.js?v=11"></script>
+<script src="/static/app.js?v=13"></script>
 
 </body>
 </html>
