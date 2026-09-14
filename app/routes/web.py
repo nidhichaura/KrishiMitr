@@ -7,7 +7,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, Response
 
 from app.config import settings
-from app.services import market_service, response_service, speech_service, vision_service
+from app.services import advisory_service, market_service, response_service, speech_service, vision_service
 from app.utils.rate_limit import enforce_api_rate_limit
 
 router = APIRouter()
@@ -65,3 +65,15 @@ async def market_price(request: Request, commodity: str, state: str, mandi: str 
     if result is None:
         raise HTTPException(status_code=404, detail="No verified mandi quote is available for this crop and state right now.")
     return {"result": result.model_dump()}
+
+
+@router.get("/api/advisory")
+async def crop_advisory(request: Request, crop: str, nitrogen: float, phosphorus: float, potassium: float, ph: float, latitude: float | None = None, longitude: float | None = None):
+    enforce_api_rate_limit(request)
+    if (latitude is None) != (longitude is None) or (latitude is not None and not (-90 <= latitude <= 90 and -180 <= longitude <= 180)):
+        raise HTTPException(status_code=422, detail="Provide both valid latitude and longitude, or leave both blank.")
+    try:
+        weather = await advisory_service.fetch_weather(latitude, longitude)
+        return {"result": advisory_service.build_advisory(crop, nitrogen, phosphorus, potassium, ph, weather)}
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc

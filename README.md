@@ -4,7 +4,9 @@ A multilingual, voice-first AI assistant backend for Indian farmers, built on
 FastAPI and the Twilio WhatsApp API.
 
 It now also includes a mobile-first farmer website at `/`: upload one clear
-leaf photo for an initial disease screen, view verified mandi prices, and
+leaf photo for an initial disease screen, view verified mandi prices, and get
+a contextual crop-and-soil advisory from soil-test NPK, pH, location and a
+short weather forecast.
 continue the conversation on WhatsApp. The public API is rate-limited and
 accepts JPG, PNG, and WEBP photos up to 8 MB.
 

@@ -6,6 +6,15 @@
 <meta name="theme-color" content="#176b42">
 <title>KrishiMitr — किसान का साथी</title>
 <link rel="stylesheet" href="/static/style.css">
+<style>
+  .advisory-choice { background: linear-gradient(135deg, #245a91, #4e93c6); }
+  .npk-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; }
+  .npk-grid label { font-weight:800; font-size:.9rem; }
+  .npk-grid input { display:block; width:100%; margin-top:6px; border:1px solid #9eb39c; border-radius:8px; padding:12px; font:inherit; }
+  .location-button { margin-top:14px; border:1px solid #5b88b7; background:#eef6ff; color:#164f86; border-radius:9px; padding:10px; font:700 .9rem inherit; cursor:pointer; }
+  @media (min-width:701px) { .choice-grid { grid-template-columns:repeat(3, 1fr); } }
+  @media (max-width:700px) { .npk-grid { grid-template-columns:repeat(2, 1fr); } }
+</style>
 </head>
 <body>
 
@@ -44,6 +53,12 @@
       <small data-i18n="choice_price_desc">सरकारी स्रोत से थोक मूल्य</small>
       <b data-i18n="choice_price_cta">भाव देखें →</b>
     </a>
+    <a class="choice advisory-choice" href="#advisory">
+      <span class="choice-icon">🧪</span>
+      <strong>फसल और मिट्टी सलाह</strong>
+      <small>मौसम और NPK के आधार पर</small>
+      <b>सलाह देखें →</b>
+    </a>
   </section>
 
   <section class="guide" id="photo">
@@ -80,6 +95,19 @@
       <button class="primary-action" type="submit"><span data-i18n="btn_check_photo">फोटो जांचें</span> <span>→</span></button>
     </form>
     <div class="result hidden" id="disease-result" aria-live="assertive"></div>
+  </section>
+
+  <section class="guide advisory-guide" id="advisory">
+    <div class="section-heading"><span>3</span><div><p class="eyebrow">आपके खेत के लिए</p><h2>फसल और मिट्टी सलाह</h2></div></div>
+    <p class="simple-note">अपनी मिट्टी जाँच रिपोर्ट के N, P, K (kg/ha) और pH भरें। GPS अनुमति देने पर 7 दिन का मौसम भी जोड़ा जाएगा।</p>
+    <form id="advisory-form" novalidate>
+      <label class="select-label"><span>फसल चुनें</span><select name="crop" required><option value="wheat">🌾 गेहूं</option><option value="rice">🍚 धान</option><option value="maize">🌽 मक्का</option><option value="soybean">🫘 सोयाबीन</option><option value="tomato">🍅 टमाटर</option></select></label>
+      <div class="npk-grid"><label>N (kg/ha)<input name="nitrogen" type="number" min="0" step="0.1" required placeholder="e.g. 65"></label><label>P (kg/ha)<input name="phosphorus" type="number" min="0" step="0.1" required placeholder="e.g. 18"></label><label>K (kg/ha)<input name="potassium" type="number" min="0" step="0.1" required placeholder="e.g. 120"></label><label>pH<input name="ph" type="number" min="0" max="14" step="0.1" required placeholder="e.g. 6.8"></label></div>
+      <input type="hidden" name="latitude"><input type="hidden" name="longitude">
+      <button class="location-button" type="button" id="use-location">📍 मेरा खेत स्थान जोड़ें (वैकल्पिक)</button>
+      <button class="primary-action" type="submit">फसल सलाह पाएं <span>→</span></button>
+    </form>
+    <div class="result hidden" id="advisory-result" aria-live="assertive"></div>
   </section>
 
   <section class="guide price-guide" id="price">

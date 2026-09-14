@@ -121,3 +121,24 @@ $('#market-form').addEventListener('submit', async e => {
     b.innerHTML = `${tr('btn_see_price')} <span>→</span>`;
   }
 });
+
+const advisoryForm = $('#advisory-form');
+$('#use-location').addEventListener('click', () => {
+  if (!navigator.geolocation) return show('advisory-result', 'Location is not available in this browser.', true);
+  navigator.geolocation.getCurrentPosition(position => {
+    advisoryForm.elements.latitude.value = position.coords.latitude.toFixed(5);
+    advisoryForm.elements.longitude.value = position.coords.longitude.toFixed(5);
+    $('#use-location').textContent = '✓ खेत स्थान जोड़ा गया';
+  }, () => show('advisory-result', 'Location permission was not given. You can still receive a soil-only advisory.', true), {timeout: 8000});
+});
+advisoryForm.addEventListener('submit', async e => {
+  e.preventDefault(); const b = advisoryForm.querySelector('.primary-action'), q = new URLSearchParams(new FormData(advisoryForm));
+  b.disabled = true; b.textContent = 'सलाह तैयार हो रही है…';
+  try {
+    const r = await fetch(`/api/advisory?${q}`); if (!r.ok) throw Error(await errorOf(r));
+    const a = (await r.json()).result, w = a.weather;
+    const weather = w.temperature_c == null ? 'स्थान नहीं दिया गया — केवल मिट्टी की सलाह' : `${w.temperature_c}°C · अगले 7 दिन बारिश ${w.rain_next_7_days_mm} mm`;
+    show('advisory-result', `<h3>🧪 ${a.crop}: ${a.readiness_score}/100 तैयार</h3><p><strong>${a.sowing_status}</strong><br>मौसम: ${weather}</p><div class="price-grid"><div>N कमी<strong>${a.nutrient_gap_kg_per_ha.N} kg/ha</strong></div><div>P कमी<strong>${a.nutrient_gap_kg_per_ha.P} kg/ha</strong></div><div>K कमी<strong>${a.nutrient_gap_kg_per_ha.K} kg/ha</strong></div></div><p>${a.notes.map(n => `• ${n}`).join('<br>')}</p><p class="disclaimer">⚠️ ${a.disclaimer}</p>`);
+  } catch (x) { show('advisory-result', x.message, true); }
+  finally { b.disabled = false; b.innerHTML = 'फसल सलाह पाएं <span>→</span>'; }
+});

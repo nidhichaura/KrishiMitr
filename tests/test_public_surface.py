@@ -37,6 +37,11 @@ class PublicSurfaceTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 415)
 
+    def test_contextual_advisory_returns_nutrient_gap(self):
+        response = self.client.get("/api/advisory", params={"crop": "wheat", "nitrogen": 60, "phosphorus": 20, "potassium": 25, "ph": 6.8})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["result"]["nutrient_gap_kg_per_ha"]["N"], 60)
+
     def test_keypad_phone_ivr_returns_a_hindi_menu(self):
         original = settings.VERIFY_TWILIO_SIGNATURES
         settings.VERIFY_TWILIO_SIGNATURES = False
