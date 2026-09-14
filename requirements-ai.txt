@@ -1,0 +1,4 @@
+# Install these only for training or real-model inference.
+# The existing requirements.txt keeps the demo application lightweight.
+torch>=2.3,<2.6
+torchvision>=0.18,<0.21

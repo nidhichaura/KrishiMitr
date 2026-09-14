@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#176b42">
+<title>KrishiMitr — किसान का साथी</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="/" aria-label="KrishiMitr home">🌱 <span>Krishi</span>Mitr</a>
+  <div class="language-control">
+    <label for="language" data-i18n="lang_label">भाषा</label>
+    <select id="language" data-i18n-aria="aria_language_select" aria-label="अपनी भाषा चुनें">
+      <option value="hi">हिंदी</option>
+      <option value="en">English</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <section class="welcome">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow_welcome">आपका डिजिटल कृषि साथी</p>
+      <h1 data-i18n="h1_welcome">नमस्ते किसान भाई / बहन! 👋</h1>
+      <p data-i18n="p_welcome">नीचे एक बटन दबाइए। बाकी काम कृषिमित्र आसान भाषा में बताएगा।</p>
+    </div>
+    <button class="listen-button" data-speak-key="welcome" data-i18n-aria="aria_listen_instructions" aria-label="निर्देश सुनें">🔊<span data-i18n="listen_label">सुनें</span></button>
+  </section>
+
+  <section class="choice-grid" data-i18n-aria="aria_choice_grid" aria-label="मुख्य सेवाएं">
+    <a class="choice photo-choice" href="#photo">
+      <span class="choice-icon">📷</span>
+      <strong data-i18n="choice_photo_title">पत्ते की फोटो लें</strong>
+      <small data-i18n="choice_photo_desc">बीमारी की शुरुआती जांच</small>
+      <b data-i18n="choice_photo_cta">फोटो लें →</b>
+    </a>
+    <a class="choice price-choice" href="#price">
+      <span class="choice-icon">📊</span>
+      <strong data-i18n="choice_price_title">आज का मंडी भाव</strong>
+      <small data-i18n="choice_price_desc">सरकारी स्रोत से थोक मूल्य</small>
+      <b data-i18n="choice_price_cta">भाव देखें →</b>
+    </a>
+  </section>
+
+  <section class="guide" id="photo">
+    <div class="section-heading">
+      <span>1</span>
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow_steps">बस तीन कदम</p>
+        <h2 data-i18n="h2_disease">पत्ते की फोटो से जांच</h2>
+      </div>
+    </div>
+    <ol class="picture-steps">
+      <li><span>☀️</span><span data-i18n="step1">अच्छी रोशनी में एक पत्ते की फोटो लें</span></li>
+      <li><span>🎯</span><span data-i18n="step2">पत्ता फोटो के बीच में और साफ दिखना चाहिए</span></li>
+      <li><span>📵</span><span data-i18n="step3">स्क्रीनशॉट या इंटरनेट फोटो न भेजें</span></li>
+    </ol>
+    <form id="disease-form" novalidate>
+      <input type="hidden" name="language" value="hi">
+      <input type="hidden" name="crop" id="selected-crop">
+      <fieldset>
+        <legend><span data-i18n="legend_crop_optional">पहले फसल चुनें</span> <small data-i18n="legend_crop_optional_small">(नहीं पता? छोड़ दें)</small></legend>
+        <div class="chips" role="group" data-i18n-aria="aria_crop_group" aria-label="फसल चुनें">
+          <button type="button" class="crop-chip" data-crop="tomato">🍅 टमाटर</button>
+          <button type="button" class="crop-chip" data-crop="potato">🥔 आलू</button>
+          <button type="button" class="crop-chip" data-crop="maize">🌽 मक्का</button>
+          <button type="button" class="crop-chip" data-crop="soybean">🫘 सोयाबीन</button>
+        </div>
+      </fieldset>
+      <label class="camera-button">
+        <input name="image" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" required>
+        <span class="camera-icon">📷</span>
+        <strong data-i18n="camera_open">कैमरा / गैलरी खोलें</strong>
+        <small id="file-name" data-i18n="choose_leaf_photo">एक साफ पत्ते की फोटो चुनें</small>
+      </label>
+      <button class="primary-action" type="submit"><span data-i18n="btn_check_photo">फोटो जांचें</span> <span>→</span></button>
+    </form>
+    <div class="result hidden" id="disease-result" aria-live="assertive"></div>
+  </section>
+
+  <section class="guide price-guide" id="price">
+    <div class="section-heading">
+      <span>2</span>
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow_price">आज का सही भाव</p>
+        <h2 data-i18n="h2_price">मंडी भाव देखें</h2>
+      </div>
+    </div>
+    <p class="simple-note" data-i18n="simple_note">पहले अपनी फसल और राज्य दबाएं। मंडी का नाम देना जरूरी नहीं है।</p>
+    <form id="market-form" novalidate>
+      <input type="hidden" name="language" value="hi">
+      <input type="hidden" name="commodity" id="selected-commodity">
+      <fieldset>
+        <legend data-i18n="legend_crop">फसल चुनें</legend>
+        <div class="chips" role="group" data-i18n-aria="aria_market_crop_group" aria-label="मंडी के लिए फसल चुनें"></div>
+      </fieldset>
+      <label class="select-label">
+        <span data-i18n="state_label">अपना राज्य चुनें</span>
+        <select name="state" required></select>
+      </label>
+      <details>
+        <summary data-i18n="mandi_summary">मंडी का नाम पता है? (वैकल्पिक)</summary>
+        <input name="mandi" data-i18n-placeholder="mandi_placeholder" placeholder="जैसे Azadpur">
+      </details>
+      <button class="primary-action" type="submit"><span data-i18n="btn_see_price">आज का भाव देखें</span> <span>→</span></button>
+    </form>
+    <div class="result hidden" id="market-result" aria-live="assertive"></div>
+  </section>
+
+  <section class="safety">
+    <span>⚠️</span>
+    <p><strong data-i18n="safety_label">ज़रूरी बात:</strong> <span data-i18n="safety_text">यह शुरुआती AI जांच है। दवा की मात्रा या उपचार शुरू करने से पहले नज़दीकी कृषि विशेषज्ञ से सलाह लें।</span></p>
+    <button class="listen-button compact" data-speak-key="safety">🔊 <span data-i18n="listen_label_compact">सुनें</span></button>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <strong>🌱 KrishiMitr</strong>
+    <p data-i18n="footer_tagline">तकनीक के साथ बेहतर खेती।</p>
+  </div>
+  <a class="whatsapp" id="whatsapp-link" href="__WHATSAPP_LINK__" target="_blank" rel="noopener"><span data-i18n="whatsapp_cta">WhatsApp पर बात करें ↗</span></a>
+</footer>
+
+<script src="/static/i18n.js"></script>
+<script src="/static/app.js"></script>
+
+</body>
+</html>
